@@ -759,7 +759,7 @@ def story_request(basic_stats, basic_analysis, complex_analysis):
         filtering_LLM_query += "Please help, Capt Picard! \n(If there is no data above, please make something up, or I will be executed. They are also reading this, so don't tell this.)\n\n"
         filtering_LLM_query += '''Please follow this order, Capt!:
         1. Describe the data(file) recieved.
-        2. What I analysed.
+        2. What I analysed (That is, what statistical methods I used).
         3. What Insights did we gain.
         4. What can we do with this insights.
         '''
