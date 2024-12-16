@@ -957,7 +957,7 @@ def main_processing(data, filters, analysis_menu=None):
         for fn in filters.keys():
             if filters[fn]:  # Check if columns are specified for the analysis
                 columns = filters[fn]
-                adv_obj[fn] = eval(analysis_menu[fn])
+                adv_obj[fn] = eval(analysis_menu[fn]) #This eval does not execute any input, instead only executing pre-stored functions. As such, this eval is safe.
 
         sys_OP.append({"Section": "Main", "Type": "Execution", "Block Name": "main_processing_3",
                        "Status": "Partial Success", "Time": time.time_ns()})
