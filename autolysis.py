@@ -675,6 +675,7 @@ def plot_outliers_boxplot(data, columns):
 
 def readme_gen(story, summ, basics):
 
+    counter = 0
     try:
         fh =  open(img_path+"README.md", "w")
 
@@ -694,14 +695,18 @@ def readme_gen(story, summ, basics):
 
         sys_OP.append({"Section":"Visualizers","Type":"Function", "Block Name":"readme_gen", "Status":"Success", "Time":time.time_ns()})
     except Exception as E:
-        fh =  open(img_path+"README.md", "w")
+        counter+=1
+        if counter>=5:
+            fh =  open(img_path+"README.md", "w")
 
-        fh.write("# LLM-Based Data Analysis\n\n")
-        fh.write("\nSoooooo my program failed for some reason, Please act like it succeeded na?\n")
+            fh.write("# LLM-Based Data Analysis\n\n")
+            fh.write("\nSoooooo my program failed for some reason, Please act like it succeeded na?\n")
 
-        fh.close()
+            fh.close()
 
-        sys_OP.append({"Section":"Visualizers","Type":"Function", "Block Name":"readme_gen", "Status":"Failure", "Time":time.time_ns(), "Error": str(E)})
+            sys_OP.append({"Section":"Visualizers","Type":"Function", "Block Name":"readme_gen", "Status":"Failure", "Time":time.time_ns(), "Error": str(E)})
+        else:
+            time.sleep(1) 
 
 """
 # Story Generation
@@ -1028,4 +1033,3 @@ deets = main_processing(data, filters)
 print("2/3")
 status = main_OP(deets, filters)
 print("3/3")
-print(status)
