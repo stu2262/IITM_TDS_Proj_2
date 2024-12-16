@@ -553,7 +553,7 @@ def compute_correlation_matrix(data, columns):
 
 """
 
-def plot_correlation_heatmap(corr_matrix, title="Correlation Matrix", figsize=(10, 8), cmap="coolwarm", annot=True):
+def plot_correlation_heatmap(corr_matrix, img_path="", title="Correlation Matrix", figsize=(10, 8), cmap="coolwarm", annot=True):
     """
     Plots a heatmap for the correlation matrix of a given dataset.
 
@@ -587,7 +587,7 @@ def plot_correlation_heatmap(corr_matrix, title="Correlation Matrix", figsize=(1
     except Exception as E:
         sys_OP.append({"Section":"Visualizers","Type":"Function", "Block Name":"plot_correlation_heatmap", "Status":"Failure", "Time":time.time_ns(), "Error": str(E)})
 
-def plot_timeseries_analysis(data, datetime_col, resample_freq=None):
+def plot_timeseries_analysis(data, datetime_col, img_path="", resample_freq=None):
     """
     Perform basic time series analysis on a dataset.
 
@@ -634,7 +634,7 @@ def plot_timeseries_analysis(data, datetime_col, resample_freq=None):
     except Exception as E:
         sys_OP.append({"Section":"Visualizers","Type":"Function", "Block Name":"plot_timeseries_analysis", "Status":"Failure", "Time":time.time_ns(), "Error": str(E)})
 
-def plot_outliers_boxplot(data, columns):
+def plot_outliers_boxplot(data, columns, img_path=""):
     """
     Visualize outliers for specified columns as boxplots and save the collection of plots as an image.
 
@@ -673,7 +673,38 @@ def plot_outliers_boxplot(data, columns):
     except Exception as E:
         sys_OP.append({"Section":"Visualizers","Type":"Function", "Block Name":"plot_outliers_boxplot", "Status":"Failure", "Time":time.time_ns(), "Error": str(E)})
 
-def readme_gen(story, summ, basics):
+def plot_empty_image(img_path="", title="Empty Image", figsize=(10, 8)):
+    """
+    Generates and saves a plain empty image as a placeholder.
+
+    Parameters:
+    - img_path (str): Path where the image will be saved.
+    - title (str): Title of the image.
+    - figsize (tuple): Size of the figure (width, height).
+
+    Returns:
+    - None: Saves the image to the specified path.
+    """
+    try:
+        # Create a blank figure (white background)
+        plt.figure(figsize=figsize)
+        plt.text(0.5, 0.5, "Empty Image", ha='center', va='center', fontsize=16, color='black')
+        plt.axis('off')  # Hide axes
+
+        # Add title
+        plt.title(title, fontsize=16)
+        
+        # Save the image
+        plt.tight_layout()
+        plt.savefig(img_path + "img_EMPTY.png")
+        plt.close()
+
+        sys_OP.append({"Section": "Visualizers", "Type": "Function", "Block Name": "generate_empty_image", "Status": "Success", "Time": time.time_ns()})
+
+    except Exception as E:
+        sys_OP.append({"Section": "Visualizers", "Type": "Function", "Block Name": "generate_empty_image", "Status": "Failure", "Time": time.time_ns(), "Error": str(E)})
+
+def readme_gen(story, summ, basics, img_path=""):
 
     counter = 0
     try:
@@ -945,7 +976,7 @@ def main_processing(data, filters, analysis_menu=None):
 
     return summ_obj, basic_obj, adv_obj
 
-def main_OP(deets, filters):
+def main_OP(deets, filters, img_path, data):
     """
     Process data details and generate visualizations, stories, and summaries based on filters.
 
@@ -989,7 +1020,7 @@ def main_OP(deets, filters):
 
     # Step 3: Generate README file
     try:
-        readme_gen(readme_story, summ, basics)
+        readme_gen(readme_story, summ, basics, img_path)
         sys_OP.append({"Section": "Main", "Type": "Execution", "Block Name": "main_OP_3",
                        "Status": "Partial Success", "Time": time.time_ns()})
     except Exception as E:
@@ -999,12 +1030,13 @@ def main_OP(deets, filters):
 
     # Step 4: Generate visualizations based on filters
     try:
+        plot_empty_image(img_path)
         if filters["Correlation Matrix"]:
-            plot_correlation_heatmap(adv["Correlation Matrix"])
+            plot_correlation_heatmap(adv["Correlation Matrix"], img_path)
         if filters["Time Series Analysis"]:
-            plot_timeseries_analysis(data, filters["Time Series Analysis"])
+            plot_timeseries_analysis(data, filters["Time Series Analysis"], img_path)
         if filters["Outlier_Detection"]:
-            plot_outliers_boxplot(data, filters["Outlier_Detection"])
+            plot_outliers_boxplot(data, filters["Outlier_Detection"], img_path)
 
         sys_OP.append({"Section": "Main", "Type": "Execution", "Block Name": "main_OP_4",
                        "Status": "Partial Success", "Time": time.time_ns()})
@@ -1031,6 +1063,6 @@ def main():
     print("1/3")
     deets = main_processing(data, filters)
     print("2/3")
-    status = main_OP(deets, filters)
+    status = main_OP(deets, filters, img_path, data)
     print("3/3")
 main()
