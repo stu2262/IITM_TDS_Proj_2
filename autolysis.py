@@ -1069,7 +1069,7 @@ def main_OP(deets, filters, img_path, data):
 """
 # Final Exec - Main
 """
-main():
+def main():
     data, filters = main_preprocessing(filename)
     print("1/3")
     deets = main_processing(data, filters)
